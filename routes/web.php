@@ -98,6 +98,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/teller/transaction/{id}', [\App\Http\Controllers\TellerController::class, 'destroyTransaction'])->name('teller.destroy');
     Route::delete('/teller/student/{id}/reset', [\App\Http\Controllers\TellerController::class, 'resetStudent'])->name('teller.reset');
 
+    Route::get('/transactions', [\App\Http\Controllers\TransactionController::class, 'index'])->name('transactions.index');
+
     Route::get('/payments', [\App\Http\Controllers\PaymentController::class, 'index'])->name('payments.index');
     Route::get('/payments/process/{student}', [\App\Http\Controllers\PaymentController::class, 'process'])->name('payments.process');
     Route::post('/payments/process/{student}', [\App\Http\Controllers\PaymentController::class, 'store'])->name('payments.store');

@@ -188,7 +188,7 @@ const chartOptions = {
             <div class="bg-white overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl border border-gray-100/60 p-6 flex flex-col">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-bold text-[#0f7632] text-lg">Transaksi Terakhir</h3>
-                    <a href="#" class="text-xs font-bold text-blue-600 hover:text-blue-800">Lihat Semua</a>
+                    <Link :href="route('transactions.index')" class="text-xs font-bold text-blue-600 hover:text-blue-800">Lihat Semua</Link>
                 </div>
                 
                 <div v-if="recent_transactions?.length === 0" class="flex-1 flex flex-col justify-center items-center bg-gray-50/50 rounded-xl border border-gray-100 border-dashed min-h-[250px]">
