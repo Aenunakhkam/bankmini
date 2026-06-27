@@ -93,6 +93,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/teller/search', [\App\Http\Controllers\TellerController::class, 'search'])->name('teller.search');
     Route::post('/teller/transaction', [\App\Http\Controllers\TellerController::class, 'store'])->name('teller.store');
     Route::get('/teller/receipt/{transaction}', [\App\Http\Controllers\TellerController::class, 'receipt'])->name('teller.receipt');
+    Route::post('/teller/transaction/{id}/void', [\App\Http\Controllers\TellerController::class, 'voidTransaction'])->name('teller.void');
+    Route::put('/teller/transaction/{id}', [\App\Http\Controllers\TellerController::class, 'updateTransaction'])->name('teller.update');
+    Route::delete('/teller/transaction/{id}', [\App\Http\Controllers\TellerController::class, 'destroyTransaction'])->name('teller.destroy');
+    Route::delete('/teller/student/{id}/reset', [\App\Http\Controllers\TellerController::class, 'resetStudent'])->name('teller.reset');
 
     Route::get('/payments', [\App\Http\Controllers\PaymentController::class, 'index'])->name('payments.index');
     Route::get('/payments/process/{student}', [\App\Http\Controllers\PaymentController::class, 'process'])->name('payments.process');
@@ -107,6 +111,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('backup/download/{file}', [\App\Http\Controllers\BackupController::class, 'download'])->name('backup.download');
     Route::delete('backup/delete/{file}', [\App\Http\Controllers\BackupController::class, 'delete'])->name('backup.delete');
     Route::post('backup/restore', [\App\Http\Controllers\BackupController::class, 'restore'])->name('backup.restore');
+
+    Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [\App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/apply-admin-fee', [\App\Http\Controllers\SettingController::class, 'applyAdminFee'])->name('settings.apply-admin-fee');
 
     Route::get('/reports/classrooms', [\App\Http\Controllers\ReportController::class, 'classrooms'])->name('reports.classrooms');
     Route::get('/reports/classrooms/{id}', [\App\Http\Controllers\ReportController::class, 'classroomDetail'])->name('reports.classroom.detail');

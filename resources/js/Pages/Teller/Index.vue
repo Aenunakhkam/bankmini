@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, router } from '@inertiajs/vue3';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -11,6 +11,108 @@ const isLoading = ref(false);
 const searchError = ref('');
 const perPage = ref(10);
 const currentPage = ref(1);
+
+const voidTransaction = (tx) => {
+    Swal.fire({
+        title: 'Batalkan Transaksi?',
+        text: `Apakah Anda yakin ingin membatalkan transaksi ${tx.transaction_number}? Sistem akan membuat Jurnal Pembalik otomatis.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Batalkan!',
+        cancelButtonText: 'Kembali'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios.post(route('teller.void', tx.id))
+                .then(response => {
+                    Swal.fire('Berhasil!', response.data.message, 'success');
+                    searchCustomer();
+                })
+                .catch(error => {
+                    const message = error.response?.data?.error || 'Terjadi kesalahan sistem';
+                    Swal.fire('Gagal!', message, 'error');
+                });
+        }
+    });
+};
+
+const deleteTransaction = (tx) => {
+    Swal.fire({
+        title: 'Hapus Transaksi Permanen?',
+        text: `Apakah Anda yakin ingin menghapus transaksi ${tx.transaction_number} secara permanen? Saldo akan dikembalikan secara otomatis.`,
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus Permanen!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios.delete(route('teller.destroy', tx.id))
+                .then(response => {
+                    Swal.fire('Berhasil!', response.data.message, 'success');
+                    searchCustomer();
+                })
+                .catch(error => {
+                    const message = error.response?.data?.error || 'Terjadi kesalahan sistem';
+                    Swal.fire('Gagal!', message, 'error');
+                });
+        }
+    });
+};
+
+const editTransaction = async (tx) => {
+    const { value: newAmount } = await Swal.fire({
+        title: 'Edit Nominal Transaksi',
+        input: 'number',
+        inputLabel: 'Masukkan nominal baru yang benar:',
+        inputValue: tx.amount,
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value || value < 1000) {
+                return 'Nominal tidak boleh kurang dari Rp 1.000!';
+            }
+        }
+    });
+
+    if (newAmount) {
+        axios.put(route('teller.update', tx.id), { amount: newAmount })
+            .then(response => {
+                Swal.fire('Berhasil!', response.data.message, 'success');
+                searchCustomer();
+            })
+            .catch(error => {
+                const message = error.response?.data?.error || 'Terjadi kesalahan sistem';
+                Swal.fire('Gagal!', message, 'error');
+            });
+    }
+};
+
+const resetStudentBalance = () => {
+    Swal.fire({
+        title: 'Hapus Semua Saldo & Riwayat?',
+        text: `Apakah Anda sangat yakin ingin mereset seluruh saldo dan menghapus semua riwayat transaksi untuk nasabah ${customer.value.name}? Tindakan ini TIDAK BISA dibatalkan!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus Semuanya!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios.delete(route('teller.reset', customer.value.id))
+                .then(response => {
+                    Swal.fire('Berhasil!', response.data.message, 'success');
+                    searchCustomer();
+                })
+                .catch(error => {
+                    const message = error.response?.data?.error || 'Terjadi kesalahan sistem';
+                    Swal.fire('Gagal!', message, 'error');
+                });
+        }
+    });
+};
 
 const paginatedTransactions = computed(() => {
     if (!customer.value || !customer.value.recent_transactions) return [];
@@ -191,6 +293,10 @@ const submitTransaction = () => {
                             <div class="mt-6 pt-6 border-t border-dashed border-gray-200">
                                 <p class="text-sm text-gray-500 font-bold mb-1">Total Saldo Saat Ini</p>
                                 <p class="text-4xl font-black text-green-600">{{ formatRupiah(customer.balance) }}</p>
+                                <button v-if="customer.balance > 0 || (customer.recent_transactions && customer.recent_transactions.length > 0)" @click="resetStudentBalance" class="mt-4 w-full py-2 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-lg border border-red-200 transition-colors flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    Hapus Semua Saldo & Riwayat
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -281,17 +387,35 @@ const submitTransaction = () => {
                                             {{ formatDate(trx.created_at) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span :class="trx.type === 'deposit' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-orange-100 text-orange-800 border-orange-200'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border">
-                                                {{ trx.type === 'deposit' ? 'Setoran' : 'Penarikan' }}
-                                            </span>
+                                            <div class="flex items-center gap-2">
+                                                <span :class="trx.type === 'deposit' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-orange-100 text-orange-800 border-orange-200'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border">
+                                                    {{ trx.type === 'deposit' ? 'Setoran' : 'Penarikan' }}
+                                                </span>
+                                                <span v-if="trx.is_voided" class="bg-red-100 text-red-800 border-red-200 px-2 inline-flex text-[10px] leading-5 font-bold rounded-full border">
+                                                    DIBATALKAN
+                                                </span>
+                                                <span v-if="trx.description?.startsWith('Koreksi Pembatalan')" class="bg-gray-100 text-gray-800 border-gray-200 px-2 inline-flex text-[10px] leading-5 font-bold rounded-full border">
+                                                    JURNAL KOREKSI
+                                                </span>
+                                            </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right" :class="trx.type === 'deposit' ? 'text-green-600' : 'text-orange-600'">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right" :class="[trx.type === 'deposit' ? 'text-green-600' : 'text-orange-600', trx.is_voided ? 'line-through opacity-50' : '']">
                                             {{ trx.type === 'deposit' ? '+' : '-' }} {{ formatRupiah(trx.amount) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">
                                             {{ formatRupiah(trx.balance_after) }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center space-x-2">
+                                            <button @click="editTransaction(trx)" class="inline-flex items-center text-xs font-bold text-gray-500 bg-gray-50 hover:bg-blue-100 hover:text-blue-600 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-blue-200 transition-colors" title="Edit Nominal">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            </button>
+                                            <button @click="deleteTransaction(trx)" class="inline-flex items-center text-xs font-bold text-gray-500 bg-gray-50 hover:bg-red-100 hover:text-red-600 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-red-200 transition-colors" title="Hapus Permanen">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </button>
+                                            <button v-if="!trx.description?.startsWith('Koreksi Pembatalan') && !trx.is_voided" @click="voidTransaction(trx)" class="inline-flex items-center text-xs font-bold text-orange-600 bg-orange-50 hover:bg-orange-100 px-3 py-1.5 rounded-lg border border-orange-200 transition-colors" title="Jurnal Pembalik (Void)">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                                                Void
+                                            </button>
                                             <a :href="route('teller.receipt', trx.id)" target="_blank" class="inline-flex items-center text-xs font-bold text-[#005fb8] bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200 transition-colors">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                                 Cetak

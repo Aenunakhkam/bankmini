@@ -31,7 +31,7 @@
             <td style="border: 1px solid #000;">{{ \Carbon\Carbon::parse($tx->created_at)->format('Y-m-d H:i') }}</td>
             <td style="border: 1px solid #000;">{{ $tx->transaction_number ?? '-' }}</td>
             <td style="border: 1px solid #000;">{{ $tx->student ? $tx->student->name : 'Nasabah Umum' }}</td>
-            <td style="border: 1px solid #000;">{{ $tx->type == 'deposit' ? 'Setoran Tunai' : 'Penarikan Tunai' }}</td>
+            <td style="border: 1px solid #000;">{{ $tx->description ?: ($tx->type == 'deposit' ? 'Setoran Tunai' : 'Penarikan Tunai') }}</td>
             <td style="border: 1px solid #000;">{{ number_format($tx->amount, 0, ',', '.') }}</td>
         </tr>
     @empty

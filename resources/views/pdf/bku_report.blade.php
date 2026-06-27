@@ -43,58 +43,56 @@
     </table>
 
     <div class="title">
-        <h3>BUKU KAS UMUM (BKU)</h3>
-        <p>Tahun Ajaran: {{ $academicYear ? $academicYear->name : 'Semua Tahun' }}</p>
+        <h3>LAPORAN BUKU MUTASI KASIR (BANK)</h3>
+        <p>Periode: Keseluruhan</p>
     </div>
 
     <table class="data">
         <thead>
             <tr>
                 <th width="5%">No</th>
-                <th width="10%">Tanggal</th>
-                <th width="15%">No. Bukti</th>
-                <th width="35%">Uraian / Keterangan</th>
-                <th width="12%">Penerimaan (Debit)</th>
-                <th width="12%">Pengeluaran (Kredit)</th>
-                <th width="11%">Saldo</th>
+                <th width="12%">Waktu/Tanggal</th>
+                <th width="15%">No. Transaksi</th>
+                <th width="20%">Nama Nasabah</th>
+                <th width="16%">Keterangan</th>
+                <th width="11%">Debit (Keluar)</th>
+                <th width="11%">Kredit (Masuk)</th>
+                <th width="10%">Saldo Akhir</th>
             </tr>
         </thead>
         <tbody>
             @php 
                 $no = 1; 
-                $saldo = 0; 
                 $totalDebit = 0;
                 $totalKredit = 0;
             @endphp
             @forelse($transactions as $tx)
                 @php
-                    $saldo += $tx->debit;
-                    $saldo -= $tx->kredit;
-                    
                     $totalDebit += $tx->debit;
                     $totalKredit += $tx->kredit;
                 @endphp
                 <tr>
                     <td class="text-center">{{ $no++ }}</td>
-                    <td class="text-center">{{ date('d/m/Y', strtotime($tx->date)) }}</td>
+                    <td class="text-center">{{ date('d/m/Y H:i', strtotime($tx->date)) }}</td>
                     <td>{{ $tx->no_bukti }}</td>
+                    <td>{{ $tx->nasabah }}</td>
                     <td>{{ $tx->keterangan }}</td>
                     <td class="text-right">{{ $tx->debit > 0 ? number_format($tx->debit, 0, ',', '.') : '-' }}</td>
                     <td class="text-right">{{ $tx->kredit > 0 ? number_format($tx->kredit, 0, ',', '.') : '-' }}</td>
-                    <td class="text-right">{{ number_format($saldo, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ number_format($tx->saldo, 0, ',', '.') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center">Tidak ada transaksi tercatat di tahun ajaran ini.</td>
+                    <td colspan="8" class="text-center">Tidak ada transaksi perbankan yang tercatat.</td>
                 </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr style="background-color: #f2f2f2; font-weight: bold;">
-                <td colspan="4" class="text-right">TOTAL KESELURUHAN</td>
+                <td colspan="5" class="text-right">TOTAL MUTASI</td>
                 <td class="text-right">{{ number_format($totalDebit, 0, ',', '.') }}</td>
                 <td class="text-right">{{ number_format($totalKredit, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($saldo, 0, ',', '.') }}</td>
+                <td class="text-right">-</td>
             </tr>
         </tfoot>
     </table>

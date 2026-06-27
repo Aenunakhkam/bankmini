@@ -138,7 +138,7 @@
                     <td class="text-center">{{ $tx->transaction_number ?? '-' }}</td>
                     <td>{{ $tx->student ? $tx->student->name : 'Nasabah Umum' }}</td>
                     <td class="text-center text-bold">
-                        {{ $tx->type == 'deposit' ? 'Setoran Tunai' : 'Penarikan Tunai' }}
+                        {{ $tx->description ?: ($tx->type == 'deposit' ? 'Setoran Tunai' : 'Penarikan Tunai') }}
                     </td>
                     <td class="text-right">{{ number_format($tx->amount, 0, ',', '.') }}</td>
                 </tr>

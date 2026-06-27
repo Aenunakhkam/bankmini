@@ -126,37 +126,49 @@ class ReportController extends Controller
         $academicYearId = session('academic_year_id');
         $academicYear = \App\Models\AcademicYear::find($academicYearId);
         
-        $payments = \App\Models\Payment::with(['student', 'user'])->get();
-            
-        $expenses = \App\Models\Expense::with(['category', 'user'])->get();
+        // Fetch all bank transactions ordered by date ascending
+        $rawTransactions = \App\Models\Transaction::with(['student', 'user'])
+            ->orderBy('created_at', 'asc')
+            ->get();
             
         $transactions = collect();
+        $runningBalance = 0;
         
-        foreach($payments as $p) {
+        foreach($rawTransactions as $tx) {
+            $debit = 0;
+            $kredit = 0;
+            
+            // Di Bank, deposit (setoran uang ke bank) artinya Kas Bank (atau tabungan nasabah) bertambah (Kredit)
+            // Withdrawal (penarikan uang) artinya Kas Bank / tabungan nasabah berkurang (Debit)
+            if ($tx->type == 'deposit') {
+                $kredit = $tx->amount;
+                $runningBalance += $tx->amount;
+            } else {
+                $debit = $tx->amount;
+                $runningBalance -= $tx->amount;
+            }
+
+            $keterangan = $tx->type == 'deposit' ? 'Setoran Tunai' : 'Penarikan Tunai';
+            if ($tx->student) {
+                $nasabah = $tx->student->name;
+            } else {
+                $nasabah = 'Nasabah Umum';
+            }
+
             $transactions->push((object)[
-                'date' => $p->date,
-                'no_bukti' => $p->invoice_number,
-                'keterangan' => 'Penerimaan Tagihan - ' . ($p->student ? $p->student->name : ''),
-                'debit' => $p->total_amount,
-                'kredit' => 0,
+                'date' => $tx->created_at,
+                'no_bukti' => $tx->transaction_number ?? '-',
+                'nasabah' => $nasabah,
+                'keterangan' => $keterangan,
+                'debit' => $debit,
+                'kredit' => $kredit,
+                'saldo' => $runningBalance
             ]);
         }
-        
-        foreach($expenses as $e) {
-            $transactions->push((object)[
-                'date' => $e->date,
-                'no_bukti' => 'EXP-' . str_pad($e->id, 4, '0', STR_PAD_LEFT),
-                'keterangan' => 'Pengeluaran: ' . $e->description,
-                'debit' => 0,
-                'kredit' => $e->amount,
-            ]);
-        }
-        
-        $transactions = $transactions->sortBy('date')->values();
         
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.bku_report', compact('transactions', 'academicYear'))
             ->setPaper('a4', 'landscape');
         
-        return $pdf->stream("Buku_Kas_Umum_" . str_replace('/', '_', $academicYear ? $academicYear->name : 'All') . ".pdf");
+        return $pdf->stream("Buku_Mutasi_Bank_" . str_replace('/', '_', $academicYear ? $academicYear->name : 'All') . ".pdf");
     }
 }
