@@ -1,1 +1,0 @@
-import{A as e,O as t,U as n,y as r}from"./app-CXr_L62-.js";var i={class:`block text-sm font-medium text-gray-700 dark:text-gray-300`},a={key:0},o={key:1},s={__name:`InputLabel`,props:{value:{type:String}},setup(s){return(c,l)=>(t(),r(`label`,i,[s.value?(t(),r(`span`,a,n(s.value),1)):(t(),r(`span`,o,[e(c.$slots,`default`)]))]))}};export{s as t};

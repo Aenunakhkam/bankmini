@@ -115,8 +115,8 @@ const chartOptions = {
             </div>
         </div>
 
-        <!-- 5 Metric Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 md:gap-6 mb-6">
+        <!-- 4 Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 mb-6">
             <!-- Total Siswa -->
             <div class="bg-white overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl border border-gray-100/60 p-5 relative group hover:-translate-y-1 transition-all">
                 <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -155,16 +155,6 @@ const chartOptions = {
                 <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Penarikan (Bulan Ini)</div>
                 <div class="text-3xl font-black text-orange-600">{{ formatRupiah(stats?.expense_this_month || 0) }}</div>
                 <div class="mt-3 text-[10px] font-semibold text-orange-700 bg-orange-50/80 border border-orange-100 inline-block px-2 py-1 rounded-md">Pengeluaran Bank</div>
-            </div>
-
-            <!-- Tunggakan -->
-            <div class="bg-white overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl border border-gray-100/60 p-5 relative group hover:-translate-y-1 transition-all">
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                </div>
-                <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Target Tabungan (Tahunan)</div>
-                <div class="text-3xl font-black text-blue-600">{{ formatRupiah(stats?.total_tunggakan || 0) }}</div>
-                <div class="mt-3 text-[10px] font-semibold text-blue-700 bg-blue-50/80 border border-blue-100 inline-block px-2 py-1 rounded-md">Estimasi Saldo</div>
             </div>
         </div>
 
