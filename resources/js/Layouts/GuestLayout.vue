@@ -61,7 +61,7 @@ watch(() => page.props.flash, () => {
 
                 <!-- Main Hero Text -->
                 <div class="mt-4 lg:mt-auto lg:mb-auto">
-                    <p class="text-base sm:text-lg lg:text-xl text-[#f59e0b] font-semibold tracking-wider uppercase mb-2 lg:mb-3 drop-shadow-sm" style="font-family: 'Montserrat', sans-serif;">Selamat Datang di Aplikasi <i>MiniBank App</i></p>
+                    <p class="text-base sm:text-lg lg:text-xl text-[#f59e0b] font-semibold tracking-wider uppercase mb-2 lg:mb-3 drop-shadow-sm" style="font-family: 'Montserrat', sans-serif;">Selamat Datang di Aplikasi <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-600 border-b-[3px] border-emerald-500 pb-0.5 inline-block">MiniBank App</span></p>
                     <h1 class="text-4xl sm:text-5xl lg:text-[4.5rem] font-extrabold leading-[1.1] lg:leading-[1.05] text-[#0f7632] tracking-tighter mb-4 lg:mb-6 drop-shadow-md" style="font-family: 'Montserrat', sans-serif;">
                         Aplikasi Perbankan <br class="hidden sm:block" /> <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#0f7632] to-[#16a34a]">Mini Sekolah</span>
                     </h1>
