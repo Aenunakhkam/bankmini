@@ -53,12 +53,6 @@ const handleVerify = (e) => {
 
 const submit = () => {
     form.clearErrors();
-    showCaptchaError.value = false;
-    
-    if (!isVerified.value) {
-        showCaptchaError.value = true;
-        return;
-    }
     
     if (!form.email || !form.password) {
         if (!form.email) form.setError('email', 'Email atau sandi harus di isi');
@@ -78,22 +72,12 @@ const submit = () => {
 
         <div class="mb-8">
             <h2 class="text-3xl font-extrabold text-[#0f7632] tracking-tight mb-2">Selamat Datang!</h2>
-            <p class="text-[15px] text-gray-500 font-medium">Masuk untuk mengakses Layanan BANKMINI SMK Hasyim Asy'ari Bojong</p>
+            <p class="text-[15px] text-gray-500 font-medium">Masuk untuk mengakses <i class="font-bold">Layanan MiniBank App</i></p>
         </div>
 
-        <!-- Warning Banner for Unchecked Verification -->
-        <div v-if="showCaptchaError" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
-            <svg class="h-5 w-5 text-red-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <div>
-                <h4 class="text-sm font-bold text-red-800">Login Gagal</h4>
-                <p class="text-xs font-semibold text-red-600 mt-0.5">Invalid captcha</p>
-                <p class="text-xs text-red-700 mt-1">Periksa kembali data yang Anda masukkan. Jika masalah berlanjut, hubungi tim dukungan.</p>
-            </div>
-        </div>
 
-        <form @submit.prevent="submit" class="space-y-6">
+
+        <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <label for="academic_year_id" class="block font-bold text-[#0f7632] mb-2 text-sm">Pilih Tahun Ajaran / Sesi</label>
                 <div class="relative">
@@ -156,19 +140,7 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <!-- Fake CAPTCHA for look & feel -->
-            <div>
-                <InputLabel value="Verifikasi" class="font-bold text-[#0f7632] mb-2 text-sm" />
-                <div class="border border-gray-200 rounded-xl p-3 flex items-center gap-3 bg-gray-50/50 max-w-[280px]">
-                    <div v-if="isVerifying" class="w-5 h-5 border-2 border-[#0f7632] border-t-transparent rounded-full animate-spin ml-1"></div>
-                    <input v-else type="checkbox" id="captcha-checkbox" :checked="isVerified" class="w-5 h-5 text-[#0f7632] rounded border-gray-300 focus:ring-[#0f7632] ml-1 pointer-events-none">
-                    <label for="captcha-checkbox" class="text-sm font-bold text-[#0f7632] cursor-pointer flex-1" @click.prevent="handleVerify">Saya bukan robot</label>
-                    <div class="ml-auto">
-                        <!-- Captcha Logo Placeholder -->
-                        <div class="w-8 h-8 opacity-40 bg-[url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23000\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z\'/%3E%3C/svg%3E')]"></div>
-                    </div>
-                </div>
-            </div>
+
 
             <div class="flex justify-between items-center pt-2">
                 <Link
@@ -191,26 +163,8 @@ const submit = () => {
                 </button>
             </div>
             
-            <div class="relative py-4">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-200"></div>
-                </div>
-                <div class="relative flex justify-center text-xs">
-                    <span class="px-3 bg-white text-gray-400 font-bold tracking-widest">ATAU</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 gap-3">
-                <Link :href="route('register')" class="flex items-center p-3 border border-gray-200 rounded-xl hover:bg-blue-50 hover:border-yellow-200 transition-colors group cursor-pointer">
-                    <div class="bg-gray-100 group-hover:bg-white p-2 rounded-lg mr-3 shrink-0">
-                        <svg class="w-5 h-5 text-[#0f7632]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-[13px] font-bold text-[#0f7632] leading-tight">Pengguna Baru?</p>
-                        <p class="text-[11px] text-gray-500 mt-0.5">Daftar di sini</p>
-                    </div>
-                    <svg class="w-4 h-4 ml-auto text-gray-400 group-hover:text-[#0f7632]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </Link>
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-600">Belum punya akun? <Link :href="route('register')" class="font-bold text-[#0f7632] hover:underline">Daftar di sini</Link></p>
             </div>
         </form>
     </GuestLayout>

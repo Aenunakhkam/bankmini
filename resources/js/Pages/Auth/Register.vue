@@ -53,10 +53,10 @@ const submit = () => {
 
         <div class="mb-6">
             <h2 class="text-3xl font-extrabold text-[#0f7632] tracking-tight mb-2">Registrasi</h2>
-            <p class="text-[15px] text-gray-500 font-medium">Buat akun untuk mengakses Layanan BANKMINI</p>
+            <p class="text-[15px] text-gray-500 font-medium">Buat akun untuk mengakses <i class="font-bold">Layanan MiniBank App</i></p>
         </div>
 
-        <form @submit.prevent="submit" class="space-y-5">
+        <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <label for="npsn" class="block font-bold text-[#0f7632] mb-1.5 text-sm">NPSN Sekolah</label>
 
@@ -154,22 +154,8 @@ const submit = () => {
                 </button>
             </div>
             
-            <div class="relative py-3">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-200"></div>
-                </div>
-                <div class="relative flex justify-center text-xs">
-                    <span class="px-3 bg-white text-gray-400 font-bold tracking-widest">ATAU</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1">
-                <Link :href="route('login')" class="flex items-center justify-center p-3 border border-gray-200 rounded-xl hover:bg-blue-50 hover:border-yellow-200 transition-colors group cursor-pointer">
-                    <p class="text-[14px] font-bold text-[#0f7632] leading-tight flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
-                        Kembali ke Halaman Masuk
-                    </p>
-                </Link>
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-600">Sudah punya akun? <Link :href="route('login')" class="font-bold text-[#0f7632] hover:underline">Masuk di sini</Link></p>
             </div>
         </form>
     </GuestLayout>

@@ -94,11 +94,22 @@ const formatRupiah = (number) => {
                         <button 
                             @click="openCustomCycleModal" 
                             :class="currentCycle === 'custom' ? 'bg-[#0f7632] text-white shadow-md' : 'bg-white border-2 border-[#0f7632] text-[#0f7632] hover:bg-green-50'"
-                            class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ml-auto md:ml-2"
+                            class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 md:ml-2"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             Ubah Siklus
                         </button>
+                        
+                        <div class="flex items-center gap-2 ml-auto">
+                            <a :href="route('catatan-keuangan.laporan.pdf', { cycle: currentCycle, start_date: startDate, end_date: endDate })" target="_blank" class="px-4 py-2 rounded-xl text-sm font-bold bg-red-500 hover:bg-red-600 text-white shadow transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                PDF (Landscape)
+                            </a>
+                            <a :href="route('catatan-keuangan.laporan.excel', { cycle: currentCycle, start_date: startDate, end_date: endDate })" target="_blank" class="px-4 py-2 rounded-xl text-sm font-bold bg-green-500 hover:bg-green-600 text-white shadow transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Excel
+                            </a>
+                        </div>
                     </div>
                 </div>
 

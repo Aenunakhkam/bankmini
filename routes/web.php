@@ -69,8 +69,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('payment-categories', \App\Http\Controllers\PaymentCategoryController::class);
     // Catatan Keuangan (Bank Mini)
     Route::get('/catatan-keuangan/pemasukan', [\App\Http\Controllers\CatatanKeuanganController::class, 'pemasukan'])->name('catatan-keuangan.pemasukan');
+    Route::get('/catatan-keuangan/pemasukan/export-pdf', [\App\Http\Controllers\CatatanKeuanganController::class, 'exportPemasukanPdf'])->name('catatan-keuangan.pemasukan.pdf');
+    Route::get('/catatan-keuangan/pemasukan/export-excel', [\App\Http\Controllers\CatatanKeuanganController::class, 'exportPemasukanExcel'])->name('catatan-keuangan.pemasukan.excel');
+    
     Route::get('/catatan-keuangan/pengeluaran', [\App\Http\Controllers\CatatanKeuanganController::class, 'pengeluaran'])->name('catatan-keuangan.pengeluaran');
+    Route::get('/catatan-keuangan/pengeluaran/export-pdf', [\App\Http\Controllers\CatatanKeuanganController::class, 'exportPengeluaranPdf'])->name('catatan-keuangan.pengeluaran.pdf');
+    Route::get('/catatan-keuangan/pengeluaran/export-excel', [\App\Http\Controllers\CatatanKeuanganController::class, 'exportPengeluaranExcel'])->name('catatan-keuangan.pengeluaran.excel');
+    
     Route::get('/catatan-keuangan/laporan', [\App\Http\Controllers\CatatanKeuanganController::class, 'laporan'])->name('catatan-keuangan.laporan');
+    Route::get('/catatan-keuangan/laporan/export-pdf', [\App\Http\Controllers\CatatanKeuanganController::class, 'exportLaporanPdf'])->name('catatan-keuangan.laporan.pdf');
+    Route::get('/catatan-keuangan/laporan/export-excel', [\App\Http\Controllers\CatatanKeuanganController::class, 'exportLaporanExcel'])->name('catatan-keuangan.laporan.excel');
     
     // (Old Simaku expenses routes removed based on plan)
     // Route::resource('expense-categories', \App\Http\Controllers\ExpenseCategoryController::class);

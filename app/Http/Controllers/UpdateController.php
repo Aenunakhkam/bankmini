@@ -61,8 +61,7 @@ class UpdateController extends Controller
                     '[Pembaruan] Modul Layanan Teller terintegrasi untuk Setor dan Tarik Tunai.',
                     '[Pembaruan] Fitur cetak Struk/Nota transaksi otomatis (Mendukung Printer Thermal).',
                     '[Pembaruan] Dashboard analitik keuangan perbankan secara realtime.',
-                    '[Perbaikan] Penyesuaian antarmuka untuk pencatatan Buku Kas Umum.',
-                    '[Pembaruan] Pemisahan struktur database dari sistem keuangan akademik (Simaku).'
+                    '[Perbaikan] Penyesuaian antarmuka untuk pencatatan Buku Kas Umum.'
                 ]
             ],
             [
