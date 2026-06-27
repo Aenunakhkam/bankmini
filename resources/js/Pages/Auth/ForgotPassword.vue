@@ -22,7 +22,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="bg-blue-100/50 p-4 rounded-xl border border-blue-200">
                     <p class="font-bold text-blue-900 mb-2">Langkah-langkah Reset Sandi (Khusus Admin):</p>
                     <ol class="list-decimal list-inside space-y-1.5 text-blue-800">
-                        <li>Buka folder instalasi: <code class="font-bold bg-white px-1.5 py-0.5 rounded text-blue-900 shadow-sm border border-blue-100">d:\program\Bankmini\</code> di komputer server.</li>
+                        <li>Buka folder instalasi Bankmini (misalnya <code class="font-bold bg-white px-1.5 py-0.5 rounded text-blue-900 shadow-sm border border-blue-100">C:\Bankmini\</code> atau <code class="font-bold bg-white px-1.5 py-0.5 rounded text-blue-900 shadow-sm border border-blue-100">D:\program\Bankmini\</code>) di komputer server.</li>
                         <li>Cari dan klik dua kali file <code class="font-bold bg-white px-1.5 py-0.5 rounded text-blue-900 shadow-sm border border-blue-100">Reset-Password-Admin.bat</code>.</li>
                         <li>Tekan <kbd class="font-bold bg-white px-1.5 py-0.5 rounded text-blue-900 shadow-sm border border-blue-100">Enter</kbd> pada jendela hitam yang muncul.</li>
                         <li>Setelah sukses, kata sandi Anda akan kembali menjadi: <code class="font-bold bg-white px-1.5 py-0.5 rounded text-green-700 shadow-sm border border-green-100">password</code></li>

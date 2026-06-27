@@ -72,7 +72,11 @@ const submit = () => {
 
         <div class="mb-8">
             <h2 class="text-3xl font-extrabold text-[#0f7632] tracking-tight mb-2">Selamat Datang!</h2>
-            <p class="text-[15px] text-gray-500 font-medium">Masuk untuk mengakses <i class="font-bold">Layanan MiniBank App</i></p>
+            <p class="text-[15px] text-gray-500 font-medium mb-3">Masuk untuk mengakses <i class="font-bold">Layanan MiniBank App</i></p>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0f7632]/10 border border-[#0f7632]/20 text-[#0f7632] text-xs font-bold rounded-lg shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                Versi 1.0
+            </div>
         </div>
 
 

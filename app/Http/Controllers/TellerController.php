@@ -20,26 +20,26 @@ class TellerController extends Controller
     public function search(Request $request)
     {
         $accountNumber = $request->account_number;
-        
+
         $customer = Student::where('nisn', $accountNumber)->first();
-        
+
         if (!$customer) {
             return response()->json(['error' => 'Nasabah tidak ditemukan'], 404);
         }
 
         // Return customer data + their recent transactions
         $recentTransactions = Transaction::where('student_id', $customer->id)
-                                ->orderBy('created_at', 'desc')
-                                ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $voidedTransactionNumbers = Transaction::where('student_id', $customer->id)
-                                ->where('description', 'like', 'Koreksi Pembatalan: %')
-                                ->pluck('description')
-                                ->map(function($desc) {
-                                    return str_replace('Koreksi Pembatalan: ', '', $desc);
-                                })->toArray();
+            ->where('description', 'like', 'Koreksi Pembatalan: %')
+            ->pluck('description')
+            ->map(function ($desc) {
+                return str_replace('Koreksi Pembatalan: ', '', $desc);
+            })->toArray();
 
-        foreach($recentTransactions as $trx) {
+        foreach ($recentTransactions as $trx) {
             $trx->is_voided = in_array($trx->transaction_number, $voidedTransactionNumbers);
         }
 
@@ -67,15 +67,15 @@ class TellerController extends Controller
             $customer = Student::findOrFail($request->student_id);
             $amount = $request->amount;
             $type = $request->type;
-            
+
             $balanceBefore = $customer->balance;
-            
+
             if ($type === 'withdrawal' && $balanceBefore < $amount) {
                 return back()->with('error', 'Saldo tidak mencukupi untuk penarikan ini.');
             }
 
             $balanceAfter = $type === 'deposit' ? ($balanceBefore + $amount) : ($balanceBefore - $amount);
-            
+
             // Update customer balance
             $customer->balance = $balanceAfter;
             $customer->save();
@@ -105,7 +105,7 @@ class TellerController extends Controller
             DB::commit();
 
             return back()->with('success', 'Transaksi berhasil diproses! Saldo saat ini: Rp ' . number_format($balanceAfter, 0, ',', '.'));
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal memproses transaksi: ' . $e->getMessage());
@@ -115,7 +115,7 @@ class TellerController extends Controller
     public function receipt($id)
     {
         $transaction = Transaction::with('student')->findOrFail($id);
-        
+
         return Inertia::render('Teller/Receipt', [
             'transaction' => $transaction
         ]);
@@ -127,7 +127,7 @@ class TellerController extends Controller
             DB::beginTransaction();
 
             $original = Transaction::findOrFail($id);
-            
+
             // Check if it's already a void transaction
             if (str_starts_with($original->description, 'Koreksi Pembatalan')) {
                 return response()->json(['error' => 'Transaksi ini adalah jurnal pembatalan dan tidak dapat dibatalkan lagi.'], 400);
@@ -141,19 +141,19 @@ class TellerController extends Controller
 
             $customer = Student::findOrFail($original->student_id);
             $amount = $original->amount;
-            
+
             // Determine the reverse type
             $reverseType = $original->type === 'deposit' ? 'withdrawal' : 'deposit';
-            
+
             $balanceBefore = $customer->balance;
-            
+
             // If original was deposit, we now withdraw. If original was withdrawal, we now deposit.
             if ($reverseType === 'withdrawal' && $balanceBefore < $amount) {
                 return response()->json(['error' => 'Saldo nasabah saat ini tidak mencukupi untuk membatalkan setoran ini.'], 400);
             }
 
             $balanceAfter = $reverseType === 'deposit' ? ($balanceBefore + $amount) : ($balanceBefore - $amount);
-            
+
             // Update customer balance
             $customer->balance = $balanceAfter;
             $customer->save();
@@ -173,7 +173,7 @@ class TellerController extends Controller
             // Sync with Global Cash Ledger
             CashLedger::create([
                 'date' => Carbon::today(),
-                'type' => $reverseType === 'deposit' ? 'debit' : 'credit', 
+                'type' => $reverseType === 'deposit' ? 'debit' : 'credit',
                 'amount' => $amount,
                 'description' => 'Pembatalan transaksi nasabah: ' . $customer->name,
                 'reference_type' => Transaction::class,
@@ -183,7 +183,7 @@ class TellerController extends Controller
             DB::commit();
 
             return response()->json(['message' => 'Transaksi berhasil dibatalkan (di-void)!']);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Gagal membatalkan transaksi: ' . $e->getMessage()], 500);
@@ -208,15 +208,15 @@ class TellerController extends Controller
 
             // Delete associated cash ledger
             CashLedger::where('reference_type', Transaction::class)
-                      ->where('reference_id', $transaction->id)
-                      ->delete();
+                ->where('reference_id', $transaction->id)
+                ->delete();
 
             // Delete transaction
             $transaction->delete();
 
             DB::commit();
             return response()->json(['message' => 'Transaksi berhasil dihapus secara permanen.']);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => 'Gagal menghapus transaksi: ' . $e->getMessage()], 500);
@@ -234,10 +234,10 @@ class TellerController extends Controller
 
             $transaction = Transaction::findOrFail($id);
             $customer = Student::findOrFail($transaction->student_id);
-            
+
             $oldAmount = $transaction->amount;
             $newAmount = $request->amount;
-            
+
             // Calculate the difference that needs to be applied
             // If it's a deposit and amount increases, difference is positive.
             // If it's a withdrawal and amount increases, it means we took more money out, so difference to balance is negative.
@@ -273,7 +273,7 @@ class TellerController extends Controller
             $cashLedger = CashLedger::where('reference_type', Transaction::class)
                 ->where('reference_id', $transaction->id)
                 ->first();
-                
+
             if ($cashLedger) {
                 $cashLedger->amount = $newAmount;
                 $cashLedger->save();
