@@ -146,6 +146,10 @@ const formattedAmount = computed({
     }
 });
 
+const setQuickNominal = (amount) => {
+    transactionForm.amount = amount;
+};
+
 const searchCustomer = async () => {
     if (!accountNumber.value) return;
     
@@ -189,7 +193,7 @@ const submitTransaction = () => {
     }
 
     if (transactionForm.type === 'withdrawal' && transactionForm.amount > customer.value.balance) {
-        Swal.fire('Gagal', 'Saldo nasabah tidak mencukupi untuk penarikan ini.', 'error');
+        Swal.fire('Gagal', 'Saldo Anda tidak cukup', 'error');
         return;
     }
 
@@ -338,6 +342,22 @@ const submitTransaction = () => {
                                     class="w-full border-gray-300 focus:border-[#f59e0b] focus:ring-[#f59e0b] rounded-xl shadow-sm py-4 text-2xl font-black text-right"
                                     placeholder="0"
                                 >
+                                <div v-show="transactionForm.type === 'withdrawal'" class="mt-3">
+                                    <span class="text-xs text-gray-500 font-semibold mb-2 block">Pilih Nominal Cepat:</span>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button type="button" @click="setQuickNominal(50000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">50.000</button>
+                                        <button type="button" @click="setQuickNominal(100000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">100.000</button>
+                                        <button type="button" @click="setQuickNominal(200000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">200.000</button>
+                                        <button type="button" @click="setQuickNominal(300000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">300.000</button>
+                                        <button type="button" @click="setQuickNominal(400000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">400.000</button>
+                                        <button type="button" @click="setQuickNominal(500000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">500.000</button>
+                                        <button type="button" @click="setQuickNominal(600000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">600.000</button>
+                                        <button type="button" @click="setQuickNominal(700000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">700.000</button>
+                                        <button type="button" @click="setQuickNominal(800000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">800.000</button>
+                                        <button type="button" @click="setQuickNominal(900000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">900.000</button>
+                                        <button type="button" @click="setQuickNominal(1000000)" class="px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-200 text-orange-700 hover:bg-orange-50 hover:border-orange-400 transition-colors bg-white">1.000.000</button>
+                                    </div>
+                                </div>
                             </div>
 
                             <button 

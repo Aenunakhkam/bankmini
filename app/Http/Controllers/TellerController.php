@@ -71,7 +71,7 @@ class TellerController extends Controller
             $balanceBefore = $customer->balance;
 
             if ($type === 'withdrawal' && $balanceBefore < $amount) {
-                return back()->with('error', 'Saldo tidak mencukupi untuk penarikan ini.');
+                return back()->with('error', 'Saldo Anda tidak cukup');
             }
 
             $balanceAfter = $type === 'deposit' ? ($balanceBefore + $amount) : ($balanceBefore - $amount);
